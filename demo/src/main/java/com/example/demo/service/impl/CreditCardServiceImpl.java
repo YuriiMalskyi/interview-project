@@ -1,67 +1,70 @@
 package com.example.demo.service.impl;
 
+import java.math.BigDecimal;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.CreditCardDTO;
+import com.example.demo.entity.CreditCard;
+import com.example.demo.repository.CreditCardRepository;
 import com.example.demo.service.CreditCardService;
+import com.example.demo.utils.ObjectMapperUtils;
 
 @Service
 @Transactional
 public class CreditCardServiceImpl implements CreditCardService{
 
+	@Autowired
+	private ObjectMapperUtils objectMapperUtils;
+	
+	@Autowired
+	private CreditCardRepository cardRepository;
+		
 	@Override
 	public void createCreditCard(CreditCardDTO cardDTO) {
-		// TODO Auto-generated method stub
-		
+		cardRepository.save(objectMapperUtils.map(cardDTO, CreditCard.class));
 	}
 
 	@Override
 	public void editCreditCard(CreditCardDTO cardDTO) {
-		// TODO Auto-generated method stub
-		
+		cardRepository.update(objectMapperUtils.map(cardDTO, CreditCard.class));				
 	}
 
 	@Override
 	public void deleteCreditCard(CreditCardDTO cardDTO) {
-		// TODO Auto-generated method stub
-		
+		cardRepository.delete(objectMapperUtils.map(cardDTO, CreditCard.class));	
 	}
 
 	@Override
-	public CreditCardDTO getCardByCardNumber(String cardNumber) {
-		// TODO Auto-generated method stub
-		return null;
+	public void deleteCreditCardByCardNumber(String cardNumber) {
+		cardRepository.deleteByCardNumber(cardNumber);
 	}
 
 	@Override
-	public void deleteByCardNumber(String cardNumber) {
-		// TODO Auto-generated method stub
-		
+	public CreditCardDTO getCreditCardByCardNumber(String cardNumber) {
+		return objectMapperUtils.map(cardRepository.findByCardNumber(cardNumber), CreditCardDTO.class);
 	}
 
 	@Override
-	public int getAccountBalance(String cardNumber) {
-		// TODO Auto-generated method stub
-		return 0;
+	public BigDecimal getCreditCardBalance(String cardNumber) {
+		return cardRepository.findBalanceByCardNumber(cardNumber);
 	}
 
 	@Override
-	public void refillMoney(String cardNumber, int summ) {
-		// TODO Auto-generated method stub
-		
+	public void refillCreditCardBalance(String cardNumber, BigDecimal summ) {
+		cardRepository.refillMoney(cardNumber, summ);	
 	}
 
 	@Override
-	public void sendMoneyFromTo(String sendingCardnumber, String recievingCartNumber, int summ, String message) {
-		// TODO Auto-generated method stub
-		
+	public void sendMoneyFromTo(String sendingCardNumber, String recievingCartNumber, BigDecimal summ, String message) {
+		cardRepository.sendMoneyFromTo(sendingCardNumber, recievingCartNumber, summ, message);		
 	}
 
 	@Override
-	public void withdrawMoney(String cardNumber, int summ) {
-		// TODO Auto-generated method stub
-		
+	public void withdrawCreditCardBalance(String cardNumber, BigDecimal summ) {
+		cardRepository.withdrawMoney(cardNumber, summ);
 	}
 
 }

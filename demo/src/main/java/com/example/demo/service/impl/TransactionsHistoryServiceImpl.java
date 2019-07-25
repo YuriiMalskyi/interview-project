@@ -2,50 +2,50 @@ package com.example.demo.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.TransactionsHistoryDTO;
+import com.example.demo.entity.TransactionsHistory;
+import com.example.demo.repository.TransactionsHistoryRepository;
 import com.example.demo.service.TransactionsHistoryService;
+import com.example.demo.utils.ObjectMapperUtils;
 
 @Service
 @Transactional
 public class TransactionsHistoryServiceImpl implements TransactionsHistoryService{
 
+	@Autowired
+	private TransactionsHistoryRepository historyRepository;
+	
+	@Autowired
+	private ObjectMapperUtils objectMapperUtils;
+	
 	@Override
 	public void createTransactionHistory(TransactionsHistoryDTO historyDTO) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void editTransactionHistory(TransactionsHistoryDTO historyDTO) {
-		// TODO Auto-generated method stub
-		
+		historyRepository.save(objectMapperUtils.map(historyDTO, TransactionsHistory.class));
 	}
 
 	@Override
 	public void deleteTransactionHistory(TransactionsHistoryDTO historyDTO) {
-		// TODO Auto-generated method stub
-		
+		historyRepository.deleteTransaction(objectMapperUtils.map(historyDTO, TransactionsHistory.class));
 	}
 
 	@Override
 	public void deleteTransactionHistoryById(int id) {
-		// TODO Auto-generated method stub
+		historyRepository.deleteTransactionById(id);
 		
 	}
 
 	@Override
 	public TransactionsHistoryDTO getTransactionHistoryById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return objectMapperUtils.map(historyRepository.getById(id), TransactionsHistoryDTO.class);
 	}
 
 	@Override
 	public List<TransactionsHistoryDTO> getAllTransactionsByCardNumber(String cardNumber) {
-		// TODO Auto-generated method stub
-		return null;
+		return objectMapperUtils.mapAll(historyRepository.getAllByCardNumber(cardNumber), TransactionsHistoryDTO.class);
 	}
 
 	

@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.math.BigDecimal;
+
 import com.example.demo.entity.CreditCard;
 
 public interface CreditCardRepository {
@@ -10,18 +12,20 @@ public interface CreditCardRepository {
 	
 	void update(CreditCard creditCard);
 				
+	void delete(CreditCard creditCard);
+	
 	void deleteById(int id);
 	
-	CreditCard getByCardNumber(String cardNumber);
+	CreditCard findByCardNumber(String cardNumber);
 	
 	void deleteByCardNumber(String cardNumber);
 	
-	int getAccountBalance(String cardNumber);
+	BigDecimal findBalanceByCardNumber(String cardNumber);
 	
-	void refillMoney(String cardNumber, int summ);
+	void refillMoney(String cardNumber, BigDecimal summ);
 	
-	void sendMoneyFromTo(String sendingCardnumber, String recievingCartNumber, int summ, String message);
+	void sendMoneyFromTo(String sendingCardNumber, String recievingCartNumber, BigDecimal summ, String message);
 	
-	void withdrawMoney(String cardNumber, int summ);
+	void withdrawMoney(String cardNumber, BigDecimal summ);
 			
 }

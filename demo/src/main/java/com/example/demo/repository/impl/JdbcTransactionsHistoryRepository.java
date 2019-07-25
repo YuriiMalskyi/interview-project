@@ -36,7 +36,6 @@ public class JdbcTransactionsHistoryRepository implements TransactionsHistoryRep
 				+ "values(?,?,?,?,?,?)",
 				transactionsHistory.getDate(), transactionsHistory.getFrom().getId(), transactionsHistory.getTo().getId(),
 				transactionsHistory.getSumm(), transactionsHistory.getOperation().toString(), transactionsHistory.getMessage());
-		
 	}
 
 	@Override
@@ -46,12 +45,12 @@ public class JdbcTransactionsHistoryRepository implements TransactionsHistoryRep
 
 	@Override
 	public List<TransactionsHistory> getAllByCardNumber(String cardNumber) {
-		CreditCard card = cardRepository.getByCardNumber(cardNumber);
+		CreditCard card = cardRepository.findByCardNumber(cardNumber);
 		return jdbcTemplate.query("select * from transactions_history where account_from_id = " + card.getId() + " or account_to_id = " + card.getId(), new BeanPropertyRowMapper<TransactionsHistory>(TransactionsHistory.class));
 	}
 
 	@Override
-	public void deleteById(int id) {
+	public void deleteTransactionById(int id) {
 		jdbcTemplate.update("delete from transactions_history where id = " + id);
 	}
 

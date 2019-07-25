@@ -35,7 +35,12 @@ public class JdbcClientRepository implements ClientRepository{
 	}
 
 	@Override
-	public void delete(int id) {		
+	public void delete(Client client) {
+		jdbcTemplate.update("delete client where id = ?", client.getId());		
+	}
+	
+	@Override
+	public void deleteById(int id) {		
 		jdbcTemplate.update("delete client where id = ?", id);
 	}
 
@@ -44,5 +49,6 @@ public class JdbcClientRepository implements ClientRepository{
 		System.out.println("\n------------------------\nIncomming value to getById(int id) method :\n" + id + "\n------------------------\n");
 		return jdbcTemplate.queryForObject("select * from client where id = " + id, new BeanPropertyRowMapper<Client>(Client.class));
 	}
+
 
 }

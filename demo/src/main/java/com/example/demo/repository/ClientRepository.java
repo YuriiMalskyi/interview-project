@@ -13,7 +13,9 @@ public interface ClientRepository {
 	
 	void update(Client client);
 	
-	void delete(int id);
+	void delete(Client client);
+	
+	void deleteById(int id);
 	
 	Client getById(int id);
 }

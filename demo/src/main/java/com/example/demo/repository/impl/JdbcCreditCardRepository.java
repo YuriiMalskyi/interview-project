@@ -1,11 +1,10 @@
 package com.example.demo.repository.impl;
 
-import java.sql.ResultSet;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -57,7 +56,13 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 	}
 
 	@Override
-	public CreditCard getByCardNumber(String cardNumber) {
+	public void delete(CreditCard creditCard) {
+		jdbcTemplate.update("delete from credit_card where id = ?", creditCard.getId());
+		
+	}
+	
+	@Override
+	public CreditCard findByCardNumber(String cardNumber) {
 		return jdbcTemplate.queryForObject("select * from credit_card where card_number = " + cardNumber, new CreditCardRowMapper());//, new BeanPropertyRowMapper<CreditCard>(CreditCard.class));		
 	}
 	
@@ -75,37 +80,37 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 
 
 	@Override
-	public int getAccountBalance(String cardNumber) {
-		return jdbcTemplate.queryForObject("select account_balance from credit_card where card_number = " + cardNumber, Integer.class);
+	public BigDecimal findBalanceByCardNumber(String cardNumber) {
+		return jdbcTemplate.queryForObject("select account_balance from credit_card where card_number = " + cardNumber, BigDecimal.class);
 	}
 	
 	@Override
-	public void refillMoney(String cardNumber, int summ) {
+	public void refillMoney(String cardNumber, BigDecimal summ) {
 		
-		summ += getAccountBalance(cardNumber);
+		summ = summ.add(findBalanceByCardNumber(cardNumber));
 		jdbcTemplate.update(
                 "update credit_card set account_balance = ? where card_number = ?",
                 summ, cardNumber);
 		
-		TransactionsHistory history = new TransactionsHistory(new Date(), null, getByCardNumber(cardNumber), summ, Operation.OPERATION_REFILL, null);
+		TransactionsHistory history = new TransactionsHistory(new Date(), null, findByCardNumber(cardNumber), summ, Operation.OPERATION_REFILL, null);
 		historyRepository.save(history);
 				
 	}
  
 	@Override
-	public void sendMoneyFromTo(String sendingCardnumber, String recievingCartNumber, int summ, String message) {
+	public void sendMoneyFromTo(String sendingCardNumber, String recievingCartNumber, BigDecimal summ, String message) {
 		jdbcTemplate.update(
                 "update credit_card set account_balance = ? where card_number = ?",
-                getAccountBalance(sendingCardnumber) - summ, sendingCardnumber);
+                findBalanceByCardNumber(sendingCardNumber).subtract(summ), sendingCardNumber);
 		jdbcTemplate.update(
                 "update credit_card set account_balance = ? where card_number = ?",
-                getAccountBalance(recievingCartNumber) + summ, recievingCartNumber);
+                findBalanceByCardNumber(recievingCartNumber).add(summ), recievingCartNumber);
 		
 		TransactionsHistory history = 
 					new TransactionsHistory(
 								new Date(), 
-								getByCardNumber(sendingCardnumber), 
-								getByCardNumber(recievingCartNumber), 
+								findByCardNumber(sendingCardNumber), 
+								findByCardNumber(recievingCartNumber), 
 								summ, 
 								Operation.OPERATION_TRANSACTION, 
 								message);
@@ -115,17 +120,16 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 	}
 
 	@Override
-	public void withdrawMoney(String cardNumber, int summ) {
+	public void withdrawMoney(String cardNumber, BigDecimal summ) {
 		try {
 		jdbcTemplate.update(
                 "update credit_card set account_balance = ? where card_number = ?",
-                getAccountBalance(cardNumber) - summ, cardNumber);
-		TransactionsHistory history = new TransactionsHistory(new Date(), null, getByCardNumber(cardNumber), summ, Operation.OPERATION_WITHDRAW, null);
+                findBalanceByCardNumber(cardNumber).subtract(summ), cardNumber);
+		TransactionsHistory history = new TransactionsHistory(new Date(), null, findByCardNumber(cardNumber), summ, Operation.OPERATION_WITHDRAW, null);
 		historyRepository.save(history);
 		} finally {
 			
 		}
 	}
-
 
 }

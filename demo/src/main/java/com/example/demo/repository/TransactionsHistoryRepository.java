@@ -14,7 +14,7 @@ public interface TransactionsHistoryRepository {
 	
 	List<TransactionsHistory> getAllByCardNumber(String cardNumber);
 	
-	void deleteById(int id);
+	void deleteTransactionById(int id);
 	
 	void deleteTransaction(TransactionsHistory transactionsHistory);
 }

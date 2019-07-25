@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -43,7 +44,7 @@ public class TransactionsHistory extends BaseEntity {
 	private CreditCard to;
 	
 	@Column(nullable = false)
-	private int summ;
+	private BigDecimal summ;
 	
 	@Enumerated(EnumType.STRING)
 	private Operation operation;

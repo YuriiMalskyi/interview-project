@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.math.BigDecimal;
+
 import com.example.demo.domain.CreditCardDTO;
 
 public interface CreditCardService {
@@ -10,15 +12,15 @@ public interface CreditCardService {
 	
 	void deleteCreditCard(CreditCardDTO cardDTO);
 	
-	CreditCardDTO getCardByCardNumber(String cardNumber);
+	void deleteCreditCardByCardNumber(String cardNumber);
 	
-	void deleteByCardNumber(String cardNumber);
-
-	int getAccountBalance(String cardNumber);
+	CreditCardDTO getCreditCardByCardNumber(String cardNumber);
 	
-	void refillMoney(String cardNumber, int summ);
+	BigDecimal getCreditCardBalance(String cardNumber);
 	
-	void sendMoneyFromTo(String sendingCardnumber, String recievingCartNumber, int summ, String message);
+	void refillCreditCardBalance(String cardNumber, BigDecimal summ);
 	
-	void withdrawMoney(String cardNumber, int summ);
+	void sendMoneyFromTo(String sendingCardNumber, String recievingCartNumber, BigDecimal summ, String message);
+	
+	void withdrawCreditCardBalance(String cardNumber, BigDecimal summ);
 }

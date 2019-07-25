@@ -7,8 +7,6 @@ import com.example.demo.domain.TransactionsHistoryDTO;
 public interface TransactionsHistoryService {
 
 	void createTransactionHistory(TransactionsHistoryDTO historyDTO);
-	
-	void editTransactionHistory(TransactionsHistoryDTO historyDTO);
 
 	void deleteTransactionHistory(TransactionsHistoryDTO historyDTO);
 	
@@ -19,3 +17,4 @@ public interface TransactionsHistoryService {
 	List<TransactionsHistoryDTO> getAllTransactionsByCardNumber(String cardNumber);
 	
 }
+ 

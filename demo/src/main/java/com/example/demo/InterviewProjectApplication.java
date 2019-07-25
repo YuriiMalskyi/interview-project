@@ -70,7 +70,7 @@ public class InterviewProjectApplication implements CommandLineRunner{
 //			
 //			cardRepository.save(card);
 //		}else {
-			CreditCard card = cardRepository.getByCardNumber("2993176808564627");
+			CreditCard card = cardRepository.findByCardNumber("2993176808564627");
 			System.out.println("\n\n\n ---------------  Card:  --------------- \n"+card.toString()+"\n\n\n");
 			card.setClient(clientRepository.getById(1));
 			System.out.println(card.toString());
