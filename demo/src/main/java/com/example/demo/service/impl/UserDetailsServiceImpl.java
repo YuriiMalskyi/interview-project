@@ -25,8 +25,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new UsernameNotFoundException("CreditCard with number [" + username + "] not found!");
 		}
 		
-		System.out.println("UserDetailsServiceImpl.loadUserByUsername() method called ");
-		System.out.println(creditCard.toString());
+//		System.out.println("UserDetailsServiceImpl.loadUserByUsername() method called ");
+//		System.out.println(creditCard.toString());
 		return User
 				.builder()
 				.username(creditCard.getCardNumber())

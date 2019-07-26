@@ -2,6 +2,8 @@ package com.example.demo.service.impl;
 
 import java.math.BigDecimal;
 
+import static com.example.demo.constants.ErrorMessages.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,8 @@ import com.example.demo.domain.ClientDTO;
 import com.example.demo.domain.CreditCardDTO;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.CreditCard;
+import com.example.demo.exceptions.CreditCardNotFoundException;
+import com.example.demo.exceptions.WithdrawSumException;
 import com.example.demo.repository.CreditCardRepository;
 import com.example.demo.service.CreditCardService;
 import com.example.demo.utils.ObjectMapperUtils;
@@ -67,6 +71,9 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 	@Override
 	public CreditCardDTO getCreditCardByCardNumber(String cardNumber) {
+		if(cardRepository.existsByCreditCardNumber(cardNumber) == false) {
+			throw new CreditCardNotFoundException(CREDIT_CARD_NOT_FOUND_EXCEPTION);
+		}
 		CreditCard entity_card = cardRepository.findByCardNumber(cardNumber);
 		
 		CreditCardDTO card = objectMapperUtils.map(entity_card, CreditCardDTO.class);
@@ -83,6 +90,7 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 	@Override
 	public void refillCreditCardBalance(String cardNumber, BigDecimal summ) {
+		if(Integer.parseInt(summ.toString()) % 100 != 0 ) throw new WithdrawSumException(ENTERED_SUM_IS_NOT_SUPPORTED_EXCEPTION);
 		cardRepository.refillMoney(cardNumber, summ);	
 	}
 
@@ -93,6 +101,7 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 	@Override
 	public void withdrawCreditCardBalance(String cardNumber, BigDecimal summ) {
+		if(Integer.parseInt(summ.toString()) % 100 != 0 ) throw new WithdrawSumException(ENTERED_SUM_IS_NOT_SUPPORTED_EXCEPTION);
 		cardRepository.withdrawMoney(cardNumber, summ);
 	}
 
