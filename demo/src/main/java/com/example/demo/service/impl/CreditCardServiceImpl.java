@@ -3,9 +3,13 @@ package com.example.demo.service.impl;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.domain.ClientDTO;
 import com.example.demo.domain.CreditCardDTO;
 import com.example.demo.entity.CreditCard;
@@ -18,13 +22,23 @@ import com.example.demo.utils.ObjectMapperUtils;
 public class CreditCardServiceImpl implements CreditCardService{
 
 	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
 	private ObjectMapperUtils objectMapperUtils;
+	
+	@Autowired
+	private JWTTokenProvider jwtTokenProvider;
 	
 	@Autowired 
 	private CreditCardRepository cardRepository;
 		
 	@Override
 	public void createCreditCard(CreditCardDTO cardDTO) {
+		cardDTO.setPassword(passwordEncoder.encode(cardDTO.getPassword()));
 		cardRepository.save(objectMapperUtils.map(cardDTO, CreditCard.class));
 	}
 
@@ -83,6 +97,14 @@ public class CreditCardServiceImpl implements CreditCardService{
 	@Override
 	public boolean existsByCreditCardNumber(String cardNumber) {
 		return cardRepository.existsByCreditCardNumber(cardNumber);
+	}
+
+	@Override
+	public String signin(String cardNumber, String password) {
+		System.out.println(">>> " + cardNumber);
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(cardNumber, password));
+		System.out.println(">>> " + password);
+		return jwtTokenProvider.createToken(cardNumber);
 	}
 
 }

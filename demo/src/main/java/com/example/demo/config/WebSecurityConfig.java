@@ -29,14 +29,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 //	@Autowired
 //	private AccessDeniedHandler accessDeniedHandler;
 	
-	@Bean
-	public UserDetailsService userDetailsService() {
-	    return super.userDetailsService();
-	}
+//	@Bean
+//	public UserDetailsService userDetailsService() {
+//	    return super.userDetailsService();
+//	}
 	
 	@Autowired
 	private JWTTokenProvider jwtTokenProvider;	
-		
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 			auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -45,7 +45,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
-		 http.csrf().disable();
+		 http.csrf().disable().cors();
+		 
+		 http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		 
+		 http.antMatcher("/**").authorizeRequests().anyRequest().authenticated()
+		 	.and()
+		 		.antMatcher("/auth/**").authorizeRequests().anyRequest().anonymous();
+		 
 //         .authorizeRequests()
 //				.antMatchers("/", "/home", "/about").permitAll()
 //				.antMatchers("/admin/**").hasAnyRole("ADMIN")

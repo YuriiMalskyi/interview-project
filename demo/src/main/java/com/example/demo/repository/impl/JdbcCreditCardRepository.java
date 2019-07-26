@@ -47,11 +47,15 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 	
 	@Override
 	public void save(CreditCard creditCard) {
+		String cardNumber = numberGenerator.generate();
+		while(jdbcTemplate.update("select count(*) from credit_card where card_number = " + cardNumber) != 0) {
+			cardNumber = numberGenerator.generate();
+		}
 		jdbcTemplate.update(
 				"insert into credit_card(account_balance, account_type, card_number, password, client_id) "
 				+ "values(?,?,?,?,?)",
 				creditCard.getAccountBalance(), creditCard.getAccountType().toString(),
-				numberGenerator.generate(), creditCard.getPassword(), creditCard.getClient().getId());
+				cardNumber, creditCard.getPassword(), creditCard.getClient().getId());
 	}
 
 	@Override

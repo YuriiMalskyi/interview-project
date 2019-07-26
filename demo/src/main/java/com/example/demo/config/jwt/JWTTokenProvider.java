@@ -24,8 +24,8 @@ public class JWTTokenProvider {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
-	public String createToken(String username) {
-		Claims claims = Jwts.claims().setSubject(username);
+	public String createToken(String cardNumber) {
+		Claims claims = Jwts.claims().setSubject(cardNumber);
 		
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + EXPIRATION_TIME);

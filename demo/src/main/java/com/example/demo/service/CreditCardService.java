@@ -27,4 +27,6 @@ public interface CreditCardService {
 	boolean existsById(int id);
 	
 	boolean existsByCreditCardNumber(String cardNumber);
+	
+	String signin(String cardNumber, String password);
 }
