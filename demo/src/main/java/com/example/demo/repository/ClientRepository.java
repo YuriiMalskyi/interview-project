@@ -18,4 +18,9 @@ public interface ClientRepository {
 	void deleteById(int id);
 	
 	Client getById(int id);
+	
+	boolean existsById(int id);
+	
+	boolean existsByPassportData(String passportData);
+	
 }

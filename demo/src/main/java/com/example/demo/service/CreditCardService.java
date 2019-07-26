@@ -23,4 +23,8 @@ public interface CreditCardService {
 	void sendMoneyFromTo(String sendingCardNumber, String recievingCartNumber, BigDecimal summ, String message);
 	
 	void withdrawCreditCardBalance(String cardNumber, BigDecimal summ);
+	
+	boolean existsById(int id);
+	
+	boolean existsByCreditCardNumber(String cardNumber);
 }

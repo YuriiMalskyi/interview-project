@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import com.example.demo.domain.response.ErrorMessage;
-import com.example.demo.exceptions.AccountNotFoundException;
-import com.example.demo.exceptions.UserServiceException;
+import com.example.demo.exceptions.ClientServiceException;
+import com.example.demo.exceptions.CreditCardNotFoundException;
 import com.example.demo.exceptions.WithdrawSumException;
 
 
 @ControllerAdvice
-public class ServerExceptionHandler {
+public class ServerExceptionsHandler {
 
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<com.example.demo.domain.response.ErrorMessage> handleExceptions(Exception e, WebRequest req){
@@ -21,8 +21,8 @@ public class ServerExceptionHandler {
 		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@ExceptionHandler(value = UserServiceException.class)
-	public ResponseEntity<ErrorMessage> handleUserServiceExceptions(UserServiceException e, WebRequest req){
+	@ExceptionHandler(value = ClientServiceException.class)
+	public ResponseEntity<ErrorMessage> handleUserServiceExceptions(ClientServiceException e, WebRequest req){
 		ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
 		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
 	}	
@@ -33,10 +33,10 @@ public class ServerExceptionHandler {
 		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(value = AccountNotFoundException.class)
-	public ResponseEntity<ErrorMessage> handleAccountNotFoundExceptions(AccountNotFoundException e, WebRequest req){
+	@ExceptionHandler(value = CreditCardNotFoundException.class)
+	public ResponseEntity<ErrorMessage> handleAccountNotFoundExceptions(CreditCardNotFoundException e, WebRequest req){
 		ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
-		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.NOT_FOUND);
 	}
 		
 }

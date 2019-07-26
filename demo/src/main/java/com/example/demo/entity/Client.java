@@ -27,4 +27,15 @@ public class Client extends BaseEntity{
 	@Column(nullable = false, unique = true)
 	private String passportData;
 	
+	public Client(Client client) {
+		this.firstName = client.firstName;
+		this.lastName = client.lastName;
+		this.passportData = client.passportData;
+	}
+
+	@Override
+	public String toString() {
+		return "Client [firstName=" + firstName + ", lastName=" + lastName + ", passportData=" + passportData + "]";
+	}
+	
 }

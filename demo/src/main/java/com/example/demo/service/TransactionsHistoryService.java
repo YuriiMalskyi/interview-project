@@ -16,5 +16,7 @@ public interface TransactionsHistoryService {
 	
 	List<TransactionsHistoryDTO> getAllTransactionsByCardNumber(String cardNumber);
 	
+	boolean existsById(int id);
+	
 }
  

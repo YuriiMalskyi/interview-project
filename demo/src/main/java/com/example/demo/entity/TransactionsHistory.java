@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -36,11 +37,11 @@ public class TransactionsHistory extends BaseEntity {
 	private Date date;
 	
 	@OneToOne
-	@JoinColumn(name = "account_from_id")
+	@JoinColumn(name = "account_from_id", nullable = true)
 	private CreditCard from;
 	
 	@OneToOne
-	@JoinColumn(name = "account_to_id")
+	@JoinColumn(name = "account_to_id", nullable = true)
 	private CreditCard to;
 	
 	@Column(nullable = false)
@@ -50,4 +51,24 @@ public class TransactionsHistory extends BaseEntity {
 	private Operation operation;
 
 	private String message;
+
+	@Override
+	public String toString() {
+		return "TransactionsHistory [date=" + date + ", from=" + from + ", to=" + to + ", summ=" + summ + ", operation="
+				+ operation + ", message=" + message + "]";
+	}
+
+	public TransactionsHistory(int id, Date date, CreditCard from, CreditCard to, BigDecimal summ, Operation operation,
+			String message) {
+		setId(id);
+		this.date = date;
+		this.from = from;
+		this.to = to;
+		this.summ = summ;
+		this.operation = operation;
+		this.message = message;
+	}
+	
+	
+	
 }

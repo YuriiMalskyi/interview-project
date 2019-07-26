@@ -17,4 +17,6 @@ public interface TransactionsHistoryRepository {
 	void deleteTransactionById(int id);
 	
 	void deleteTransaction(TransactionsHistory transactionsHistory);
+	
+	boolean existsById(int id);
 }

@@ -23,12 +23,12 @@ public class TransactionsHistoryController {
 	@Autowired
 	private TransactionsHistoryService historyService;
 
-	@PostMapping
-	public ResponseEntity<Void> addTransactionsHistory(@RequestBody TransactionsHistoryDTO historyDTO){
-		historyService.createTransactionHistory(historyDTO);
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
-	}
-		
+//	@PostMapping
+//	public ResponseEntity<Void> addTransactionsHistory(@RequestBody TransactionsHistoryDTO historyDTO){
+//		historyService.createTransactionHistory(historyDTO);
+//		return new ResponseEntity<Void>(HttpStatus.CREATED);
+//	}
+	
 	@DeleteMapping
 	public ResponseEntity<Void> deleteTransactionsHistory(@RequestBody TransactionsHistoryDTO historyDTO){
 		historyService.deleteTransactionHistory(historyDTO);
@@ -44,6 +44,11 @@ public class TransactionsHistoryController {
 	@GetMapping("/{card_number}")
 	public ResponseEntity<List<TransactionsHistoryDTO>> getAllTransactionsHistoryByCardNumber(@PathVariable("card_number") String cardNumber){
 		return new ResponseEntity<List<TransactionsHistoryDTO>>(historyService.getAllTransactionsByCardNumber(cardNumber), HttpStatus.OK);
+	}
+	
+	@GetMapping("/exists/{id}")
+	public ResponseEntity<Boolean> existsById(@PathVariable("id") int id){
+		return new ResponseEntity<Boolean>(historyService.existsById(id), HttpStatus.OK);
 	}
 	
 }

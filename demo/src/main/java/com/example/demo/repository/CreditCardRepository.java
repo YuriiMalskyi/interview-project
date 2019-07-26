@@ -16,6 +16,8 @@ public interface CreditCardRepository {
 	
 	void deleteById(int id);
 	
+	CreditCard findById(int id);
+	
 	CreditCard findByCardNumber(String cardNumber);
 	
 	void deleteByCardNumber(String cardNumber);
@@ -27,5 +29,9 @@ public interface CreditCardRepository {
 	void sendMoneyFromTo(String sendingCardNumber, String recievingCartNumber, BigDecimal summ, String message);
 	
 	void withdrawMoney(String cardNumber, BigDecimal summ);
-			
+
+	boolean existsById(int id);
+	
+	boolean existsByCreditCardNumber(String cardNumber);
+	
 }

@@ -14,4 +14,7 @@ public interface ClientService {
 	
 	ClientDTO getClientById(int id);
 	
+	boolean existsById(int id);
+	
+	boolean existsByPassportData(String passportData);
 }

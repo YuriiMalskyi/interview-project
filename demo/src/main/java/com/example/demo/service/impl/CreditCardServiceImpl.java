@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.domain.ClientDTO;
 import com.example.demo.domain.CreditCardDTO;
 import com.example.demo.entity.CreditCard;
 import com.example.demo.repository.CreditCardRepository;
@@ -19,7 +20,7 @@ public class CreditCardServiceImpl implements CreditCardService{
 	@Autowired
 	private ObjectMapperUtils objectMapperUtils;
 	
-	@Autowired
+	@Autowired 
 	private CreditCardRepository cardRepository;
 		
 	@Override
@@ -44,7 +45,14 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 	@Override
 	public CreditCardDTO getCreditCardByCardNumber(String cardNumber) {
-		return objectMapperUtils.map(cardRepository.findByCardNumber(cardNumber), CreditCardDTO.class);
+		CreditCardDTO card = new CreditCardDTO();	
+		CreditCard entity_card = cardRepository.findByCardNumber(cardNumber);
+		
+		card = objectMapperUtils.map(entity_card, CreditCardDTO.class);
+		card.setClientDTO(objectMapperUtils.map(entity_card.getClient(), ClientDTO.class));
+		
+//		return objectMapperUtils.map(cardRepository.findByCardNumber(cardNumber), CreditCardDTO.class);
+		return card;
 	}
 
 	@Override
@@ -65,6 +73,16 @@ public class CreditCardServiceImpl implements CreditCardService{
 	@Override
 	public void withdrawCreditCardBalance(String cardNumber, BigDecimal summ) {
 		cardRepository.withdrawMoney(cardNumber, summ);
+	}
+
+	@Override
+	public boolean existsById(int id) {
+		return cardRepository.existsById(id);
+	}
+
+	@Override
+	public boolean existsByCreditCardNumber(String cardNumber) {
+		return cardRepository.existsByCreditCardNumber(cardNumber);
 	}
 
 }

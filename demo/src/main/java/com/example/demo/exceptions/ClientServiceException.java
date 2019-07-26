@@ -1,10 +1,10 @@
 package com.example.demo.exceptions;
 
-public class UserServiceException extends RuntimeException {
+public class ClientServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = 209507288353319104L;
 
-	public UserServiceException(String message) {
+	public ClientServiceException(String message) {
 		super(message);
 	}
 	

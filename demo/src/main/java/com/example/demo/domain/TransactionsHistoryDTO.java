@@ -1,9 +1,9 @@
 package com.example.demo.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
-import com.example.demo.entity.CreditCard;
 import com.example.demo.enums.Operation;
 
 import lombok.Data;
@@ -17,9 +17,9 @@ public class TransactionsHistoryDTO {
 	
 	private Date date;
 	
-	private CreditCard from;
+	private CreditCardDTO from;
 	
-	private CreditCard to;
+	private CreditCardDTO to;
 	
 	private BigDecimal summ;
 	

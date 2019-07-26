@@ -30,24 +30,36 @@ public class JdbcClientRepository implements ClientRepository{
 	@Override
 	public void update(Client client) {
 		jdbcTemplate.update(
-                "update client set firstName = ?, lastName = ?, passportData = ? where id = ?",
+                "update client set first_name = ?, last_name = ?, passport_data = ? where id = ?",
                 client.getFirstName(), client.getLastName(), client.getPassportData(), client.getId());
 	}
 
 	@Override
 	public void delete(Client client) {
-		jdbcTemplate.update("delete client where id = ?", client.getId());		
+		jdbcTemplate.update("delete from client where id = ?", client.getId());		
 	}
 	
 	@Override
 	public void deleteById(int id) {		
-		jdbcTemplate.update("delete client where id = ?", id);
+		jdbcTemplate.update("delete from client where id = ?", id);
 	}
 
 	@Override
 	public Client getById(int id) {
 		System.out.println("\n------------------------\nIncomming value to getById(int id) method :\n" + id + "\n------------------------\n");
-		return jdbcTemplate.queryForObject("select * from client where id = " + id, new BeanPropertyRowMapper<Client>(Client.class));
+		Client cl =  jdbcTemplate.queryForObject("select * from client where id = " + id, new BeanPropertyRowMapper<Client>(Client.class));
+		cl.toString();
+		return cl;
+	}
+
+	@Override
+	public boolean existsById(int id) {
+		return jdbcTemplate.queryForObject("select count(*) from client where id = " + id, Integer.class) < 1 ? false : true ;
+	}
+
+	@Override
+	public boolean existsByPassportData(String passportData) {
+		return jdbcTemplate.queryForObject("select count(*) from client where passport_data = \'" + passportData + "\'", Integer.class) < 1 ? false : true ;
 	}
 
 

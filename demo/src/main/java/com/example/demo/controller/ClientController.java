@@ -51,5 +51,14 @@ public class ClientController {
 		return new ResponseEntity<ClientDTO>(clientService.getClientById(id), HttpStatus.OK);
 	}
 	
+	@GetMapping("/exists/{id}")
+	public ResponseEntity<Boolean> existsById(@PathVariable("id") int id){
+		return new ResponseEntity<Boolean>(clientService.existsById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/exists/passport-{passport_data}")
+	public ResponseEntity<Boolean> existsByPassportData(@PathVariable("passport_data") String passportData){
+		return new ResponseEntity<Boolean>(clientService.existsByPassportData(passportData), HttpStatus.OK);
+	}
 	
 }

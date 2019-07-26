@@ -29,7 +29,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "credit_card", indexes = @Index(columnList = "cardnumber"))
 public class CreditCard extends BaseEntity {
-
+	
 	@Column(nullable = false, unique = true, length = 16)
 	private String cardNumber;
 	
@@ -46,4 +46,10 @@ public class CreditCard extends BaseEntity {
 	@JoinColumn(name = "client_id")
 	private Client client;
 	
+	@Override
+	public String toString() {
+		return "CreditCard [cardNumber=" + cardNumber + ", password=" + password + ", accountBalance=" + accountBalance
+				+ ", accountType=" + accountType + ", client=" + client + "]";
+	}
+
 }

@@ -1,17 +1,23 @@
 package com.example.demo.repository.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.entity.Client;
 import com.example.demo.entity.CreditCard;
 import com.example.demo.entity.TransactionsHistory;
+import com.example.demo.enums.AccountType;
 import com.example.demo.enums.Operation;
+import com.example.demo.exceptions.CreditCardNotFoundException;
 import com.example.demo.mappers.CreditCardRowMapper;
+import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.CreditCardRepository;
 import com.example.demo.repository.TransactionsHistoryRepository;
 import com.example.demo.utils.NumberGenerator;
@@ -25,10 +31,11 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 	@Autowired
 	@Lazy
 	private TransactionsHistoryRepository historyRepository;
-		
-	@Autowired
-	private CreditCardRowMapper cardRowMapper;
 	
+	@Autowired
+	@Lazy
+	private ClientRepository clientRepository;
+			
 	@Autowired
 	NumberGenerator numberGenerator;
 	
@@ -58,12 +65,51 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 	@Override
 	public void delete(CreditCard creditCard) {
 		jdbcTemplate.update("delete from credit_card where id = ?", creditCard.getId());
-		
 	}
 	
 	@Override
 	public CreditCard findByCardNumber(String cardNumber) {
-		return jdbcTemplate.queryForObject("select * from credit_card where card_number = " + cardNumber, new CreditCardRowMapper());//, new BeanPropertyRowMapper<CreditCard>(CreditCard.class));		
+		CreditCard card = new CreditCard();
+		return jdbcTemplate.query("select * from credit_card where card_number = ?", new Object[]{cardNumber}, rs -> {
+			
+            if(rs.next()){
+            	card.setId(rs.getInt("id"));
+        		card.setCardNumber(rs.getString("card_number"));
+        		card.setPassword(rs.getString("password"));
+        		card.setAccountBalance(rs.getBigDecimal("account_balance"));	
+        		
+        		card.setAccountType(AccountType.convertString(rs.getString("account_type")));
+        		card.setClient(clientRepository.getById(rs.getInt("client_id")));
+                return card;
+            }
+            else {
+            	return card;
+            }
+
+    });
+	}
+	
+
+	@Override
+	public CreditCard findById(int id) {		
+		CreditCard card = new CreditCard();
+		return jdbcTemplate.query("select * from credit_card where id = ?", new Object[]{id}, rs -> {
+			
+            if(rs.next()){
+            	card.setId(rs.getInt("id"));
+        		card.setCardNumber(rs.getString("card_number"));
+        		card.setPassword(rs.getString("password"));
+        		card.setAccountBalance(rs.getBigDecimal("account_balance"));	
+        		
+        		card.setAccountType(AccountType.convertString(rs.getString("account_type")));
+        		card.setClient(clientRepository.getById(rs.getInt("client_id")));
+                return card;
+            }
+            else {
+            	return card;
+            }
+
+    });
 	}
 	
 	@Override
@@ -92,7 +138,7 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
                 "update credit_card set account_balance = ? where card_number = ?",
                 summ, cardNumber);
 		
-		TransactionsHistory history = new TransactionsHistory(new Date(), null, findByCardNumber(cardNumber), summ, Operation.OPERATION_REFILL, null);
+		TransactionsHistory history = new TransactionsHistory(new Date(), null, findByCardNumber(cardNumber), summ, Operation.REFILL, null);
 		historyRepository.save(history);
 				
 	}
@@ -112,7 +158,7 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 								findByCardNumber(sendingCardNumber), 
 								findByCardNumber(recievingCartNumber), 
 								summ, 
-								Operation.OPERATION_TRANSACTION, 
+								Operation.TRANSACTION, 
 								message);
 		
 		historyRepository.save(history);
@@ -125,11 +171,21 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 		jdbcTemplate.update(
                 "update credit_card set account_balance = ? where card_number = ?",
                 findBalanceByCardNumber(cardNumber).subtract(summ), cardNumber);
-		TransactionsHistory history = new TransactionsHistory(new Date(), null, findByCardNumber(cardNumber), summ, Operation.OPERATION_WITHDRAW, null);
+		TransactionsHistory history = new TransactionsHistory(new Date(), null, findByCardNumber(cardNumber), summ, Operation.WITHDRAW, null);
 		historyRepository.save(history);
 		} finally {
 			
 		}
+	}
+
+	@Override
+	public boolean existsById(int id) {
+		return jdbcTemplate.queryForObject("select count(*) from credit_card where id = " + id, Integer.class) < 1 ? false : true;
+	}
+
+	@Override
+	public boolean existsByCreditCardNumber(String cardNumber) {
+		return jdbcTemplate.queryForObject("select count(*) from credit_card where card_number = \'" + cardNumber + "\'", Integer.class) < 1 ? false : true;
 	}
 
 }

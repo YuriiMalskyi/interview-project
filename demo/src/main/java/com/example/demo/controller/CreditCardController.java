@@ -40,7 +40,7 @@ public class CreditCardController {
 	@DeleteMapping
 	public ResponseEntity<Void> deleteCreditCard(@RequestBody CreditCardDTO cardDTO){
 		creditCardService.deleteCreditCard(cardDTO);
-		return new ResponseEntity<Void>(HttpStatus.OK);		
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("delete/{card_number}")
@@ -78,4 +78,13 @@ public class CreditCardController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
+	@GetMapping("/exists/{id}")
+	public ResponseEntity<Boolean> existsById(@PathVariable("id") int id){
+		return new ResponseEntity<Boolean>(creditCardService.existsById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/exists/credir-card-{card_number}")
+	public ResponseEntity<Boolean> existsById(@PathVariable("card_number") String cardNumber){
+		return new ResponseEntity<Boolean>(creditCardService.existsByCreditCardNumber(cardNumber), HttpStatus.OK);
+	}
 }
