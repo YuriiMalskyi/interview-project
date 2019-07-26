@@ -104,7 +104,7 @@ public class CreditCardServiceImpl implements CreditCardService{
 		System.out.println(">>> " + cardNumber);
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(cardNumber, password));
 		System.out.println(">>> " + password);
-		return jwtTokenProvider.createToken(cardNumber);
+		return jwtTokenProvider.createToken(cardNumber, "");
 	}
 
 }

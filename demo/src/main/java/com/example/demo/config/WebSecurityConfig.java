@@ -44,10 +44,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		 
 		 .and()
 		 
-		 .antMatcher("/**").authorizeRequests().anyRequest().anonymous()/*.authenticated()
+		 .authorizeRequests().antMatchers("/client/**", "/transactions-history/**", "/credit-card/**").hasAnyAuthority("", "CLIENT")
+		 
+		 .and()
+			
+		 .authorizeRequests().antMatchers("/auth/signin*").anonymous()
+		 
+		 
+/*		 .antMatcher("/**").authorizeRequests()/*.anyRequest().anonymous()/*.authenticated()
 		 	.and()
 		 		.antMatcher("/auth/**").authorizeRequests().anyRequest().anonymous();*/
-		 .and()		 
+		 .and()
 		 
 		 .apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
 	}

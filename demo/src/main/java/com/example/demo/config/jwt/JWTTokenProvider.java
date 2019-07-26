@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,9 @@ public class JWTTokenProvider {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
-	public String createToken(String cardNumber) {
+	public String createToken(String cardNumber, String role) {
 		Claims claims = Jwts.claims().setSubject(cardNumber);
+		claims.put("auth", AuthorityUtils.createAuthorityList(role));
 		
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + EXPIRATION_TIME);

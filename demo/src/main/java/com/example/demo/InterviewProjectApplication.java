@@ -15,6 +15,7 @@ import com.example.demo.entity.CreditCard;
 import com.example.demo.entity.TransactionsHistory;
 import com.example.demo.enums.AccountType;
 import com.example.demo.enums.Operation;
+import com.example.demo.enums.Roles;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.CreditCardRepository;
 import com.example.demo.repository.TransactionsHistoryRepository;
