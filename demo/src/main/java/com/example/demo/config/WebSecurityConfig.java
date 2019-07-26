@@ -42,15 +42,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		 
 		 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		 
-		 .and()
-		 
-		 .authorizeRequests().antMatchers("/client/**", "/transactions-history/**", "/credit-card/**").hasAnyAuthority("", "CLIENT")
+//		 .and()
+//		 
+//		 .authorizeRequests().antMatchers("/client/**", "/transactions-history/**", "/credit-card/**").hasAnyAuthority("", "CLIENT")
 		 
 		 .and()
 			
-		 .authorizeRequests().antMatchers("/auth/signin*").anonymous()
-		 
-		 
+		 .authorizeRequests().antMatchers("/**").anonymous()//("/auth/signin*").anonymous()
+		 			 
 /*		 .antMatcher("/**").authorizeRequests()/*.anyRequest().anonymous()/*.authenticated()
 		 	.and()
 		 		.antMatcher("/auth/**").authorizeRequests().anyRequest().anonymous();*/

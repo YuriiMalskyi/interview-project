@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.example.demo.enums.AccountType;
+import com.example.demo.enums.Roles;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,9 @@ public class CreditCard extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
 
+	@Enumerated(EnumType.STRING)
+	private Roles role;	
+	
 	@OneToOne
 	@JoinColumn(name = "client_id")
 	private Client client;

@@ -12,6 +12,7 @@ import com.example.demo.entity.CreditCard;
 import com.example.demo.entity.TransactionsHistory;
 import com.example.demo.enums.AccountType;
 import com.example.demo.enums.Operation;
+import com.example.demo.enums.Roles;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.CreditCardRepository;
 import com.example.demo.repository.TransactionsHistoryRepository;
@@ -47,18 +48,18 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 			cardNumber = numberGenerator.generate();
 		}
 		jdbcTemplate.update(
-				"insert into credit_card(account_balance, account_type, card_number, password, client_id) "
+				"insert into credit_card(account_balance, account_type, card_number, password, role, client_id) "
 				+ "values(?,?,?,?,?)",
 				creditCard.getAccountBalance(), creditCard.getAccountType().toString(),
-				cardNumber, creditCard.getPassword(), creditCard.getClient().getId());
+				cardNumber, creditCard.getPassword(), creditCard.getRole(), creditCard.getClient().getId());
 	}
 
 	@Override
 	public void update(CreditCard creditCard) {
 		jdbcTemplate.update(
-                "update credit_card set account_balance = ?, account_type = ?, password = ?, client_id = ? where id = ?",
+                "update credit_card set account_balance = ?, account_type = ?, password = ?, role = ?, client_id = ? where id = ?",
                 creditCard.getAccountBalance(), creditCard.getAccountType().toString(),
-                creditCard.getPassword(), creditCard.getClient().getId(), creditCard.getId());
+                creditCard.getPassword(), creditCard.getRole(), creditCard.getClient().getId(), creditCard.getId());
 	}
 
 	@Override
@@ -75,9 +76,9 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
             	card.setId(rs.getInt("id"));
         		card.setCardNumber(rs.getString("card_number"));
         		card.setPassword(rs.getString("password"));
-        		card.setAccountBalance(rs.getBigDecimal("account_balance"));	
-        		
+        		card.setAccountBalance(rs.getBigDecimal("account_balance"));
         		card.setAccountType(AccountType.convertString(rs.getString("account_type")));
+        		card.setRole(Roles.convertString(rs.getString("role")));
         		card.setClient(clientRepository.getById(rs.getInt("client_id")));
                 return card;
             }
@@ -99,8 +100,8 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
         		card.setCardNumber(rs.getString("card_number"));
         		card.setPassword(rs.getString("password"));
         		card.setAccountBalance(rs.getBigDecimal("account_balance"));	
-        		
         		card.setAccountType(AccountType.convertString(rs.getString("account_type")));
+        		card.setRole(Roles.convertString(rs.getString("role")));
         		card.setClient(clientRepository.getById(rs.getInt("client_id")));
                 return card;
             }

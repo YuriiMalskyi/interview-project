@@ -55,8 +55,8 @@ public class CreditCardController {
 	}
 	
 	@GetMapping("/balance/{card_number}")
-	public ResponseEntity<CreditCardDTO> getCreditCardBalanceByCardNumber(@PathVariable("card_number") String cardNumber){
-		return new ResponseEntity<CreditCardDTO>(creditCardService.getCreditCardByCardNumber(cardNumber), HttpStatus.OK);
+	public ResponseEntity<BigDecimal> getCreditCardBalanceByCardNumber(@PathVariable("card_number") String cardNumber){
+		return new ResponseEntity<BigDecimal>(creditCardService.getCreditCardBalance(cardNumber), HttpStatus.OK);
 	}
 	
 	@PutMapping("/balance/refill/{card_number}-{summ}")

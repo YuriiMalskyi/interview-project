@@ -51,9 +51,9 @@ public class InterviewProjectApplication implements CommandLineRunner{
 
 		if(cardRepository.count() == 0) {
 			
-			cardRepository.save(new CreditCard("", "1234", new BigDecimal(500000.00), AccountType.DOLLAR, clientRepository.getById(1)));
+			cardRepository.save(new CreditCard("", "1234", new BigDecimal(500000.00), AccountType.DOLLAR, Roles.CLIENT, clientRepository.getById(1)));
 			
-			cardRepository.save(new CreditCard("", "1111", new BigDecimal(10000.00), AccountType.UAH, clientRepository.getById(2)));
+			cardRepository.save(new CreditCard("", "1111", new BigDecimal(10000.00), AccountType.UAH, Roles.CLIENT, clientRepository.getById(2)));
 		}
 		
 		if(transactionsHistoryRepository.count() < 1) {

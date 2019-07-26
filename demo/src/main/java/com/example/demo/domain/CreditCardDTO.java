@@ -3,6 +3,7 @@ package com.example.demo.domain;
 import java.math.BigDecimal;
 
 import com.example.demo.enums.AccountType;
+import com.example.demo.enums.Roles;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +24,7 @@ public class CreditCardDTO {
 	
 	private AccountType accountType;
 
+	private Roles role;
+	
 	private ClientDTO clientDTO;
 }
