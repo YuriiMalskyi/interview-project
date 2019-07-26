@@ -20,4 +20,5 @@ public class JWTTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
 		builder.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
+	
 }

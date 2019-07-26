@@ -33,7 +33,7 @@ public class CreditCard extends BaseEntity {
 	@Column(nullable = false, unique = true, length = 16)
 	private String cardNumber;
 	
-	@Column(nullable = false, length = 4)
+	@Column(nullable = false)//, length = 4)
 	private String password;
 	
 	@Column(nullable = false, columnDefinition = "DECIMAL(10,2)")
@@ -48,11 +48,13 @@ public class CreditCard extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
-	
+
 	@Override
 	public String toString() {
 		return "CreditCard [cardNumber=" + cardNumber + ", password=" + password + ", accountBalance=" + accountBalance
-				+ ", accountType=" + accountType + ", client=" + client + "]";
+				+ ", accountType=" + accountType + ", role=" + role + ", client=" + client + "]";
 	}
+	
+	
 
 }

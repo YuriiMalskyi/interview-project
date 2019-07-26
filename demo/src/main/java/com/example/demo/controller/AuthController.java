@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.domain.request.LoginRequest;
+import com.example.demo.domain.request.SigninRequest;
 import com.example.demo.domain.response.SigninResponse;
-import com.example.demo.enums.Roles;
 import com.example.demo.service.CreditCardService;
 
 @RestController
@@ -21,12 +20,12 @@ public class AuthController {
 	private CreditCardService creditCardService;
 	
 	@PostMapping("signin")
-	public ResponseEntity<SigninResponse> signin(@RequestBody LoginRequest request) {
-		String token = creditCardService.signin(request.getCardNumber(), request.getPassword());
+	public ResponseEntity<SigninResponse> signin(@RequestBody SigninRequest request) {
+		String token = creditCardService.signin(request.getUsername(), request.getPassword());
 		String role = "";
-		System.out.println(token + "\n" + request.getCardNumber() + "\n" + request.getPassword());
+		System.out.println(token + "\n" + request.getUsername() + "\n" + request.getPassword());
 		if(token != null) {
-			role = Roles.CLIENT.toString();
+			role = creditCardService.getCreditCardByCardNumber(request.getUsername()).getRole().toString();
 		}
 		return new ResponseEntity<SigninResponse>(new SigninResponse(token, role), HttpStatus.OK);
 	}

@@ -10,7 +10,7 @@ public enum Roles implements GrantedAuthority{
 		
 		switch(possibleRole) {
 		
-		case "WITHDRAW": role = Roles.CLIENT;
+		case "CLIENT": role = Roles.CLIENT;
 		break;
 		
 		default: role = null;

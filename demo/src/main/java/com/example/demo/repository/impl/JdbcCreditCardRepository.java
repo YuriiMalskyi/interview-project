@@ -43,15 +43,20 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 	
 	@Override
 	public void save(CreditCard creditCard) {
+		System.out.println("\n\n\n" + creditCard + "\n\n\n");
 		String cardNumber = numberGenerator.generate();
 		while(jdbcTemplate.queryForObject("select count(*) from credit_card where card_number = " + cardNumber, Integer.class) != 0) {
 			cardNumber = numberGenerator.generate();
 		}
+		System.out.println("\n\n\n" + creditCard.getRole().toString() + "\n\n\n");
 		jdbcTemplate.update(
 				"insert into credit_card(account_balance, account_type, card_number, password, role, client_id) "
-				+ "values(?,?,?,?,?)",
+				+ "values(?,?,?,?,?,?)",
 				creditCard.getAccountBalance(), creditCard.getAccountType().toString(),
-				cardNumber, creditCard.getPassword(), creditCard.getRole(), creditCard.getClient().getId());
+				cardNumber, 
+				creditCard.getPassword(), 
+				creditCard.getRole().toString(), 
+				creditCard.getClient().getId());
 	}
 
 	@Override
@@ -59,7 +64,7 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 		jdbcTemplate.update(
                 "update credit_card set account_balance = ?, account_type = ?, password = ?, role = ?, client_id = ? where id = ?",
                 creditCard.getAccountBalance(), creditCard.getAccountType().toString(),
-                creditCard.getPassword(), creditCard.getRole(), creditCard.getClient().getId(), creditCard.getId());
+                creditCard.getPassword(), creditCard.getRole().toString(), creditCard.getClient().getId(), creditCard.getId());
 	}
 
 	@Override
@@ -79,6 +84,7 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
         		card.setAccountBalance(rs.getBigDecimal("account_balance"));
         		card.setAccountType(AccountType.convertString(rs.getString("account_type")));
         		card.setRole(Roles.convertString(rs.getString("role")));
+//        		card.setRole(Roles.valueOf(rs.getString("role")));
         		card.setClient(clientRepository.getById(rs.getInt("client_id")));
                 return card;
             }

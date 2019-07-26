@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.domain.ClientDTO;
 import com.example.demo.domain.CreditCardDTO;
+import com.example.demo.entity.Client;
 import com.example.demo.entity.CreditCard;
 import com.example.demo.repository.CreditCardRepository;
 import com.example.demo.service.CreditCardService;
@@ -20,7 +21,7 @@ import com.example.demo.utils.ObjectMapperUtils;
 @Service
 @Transactional
 public class CreditCardServiceImpl implements CreditCardService{
-
+	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -39,12 +40,19 @@ public class CreditCardServiceImpl implements CreditCardService{
 	@Override
 	public void createCreditCard(CreditCardDTO cardDTO) {
 		cardDTO.setPassword(passwordEncoder.encode(cardDTO.getPassword()));
-		cardRepository.save(objectMapperUtils.map(cardDTO, CreditCard.class));
+		
+		CreditCard card = objectMapperUtils.map(cardDTO, CreditCard.class);
+		card.setClient(objectMapperUtils.map(cardDTO.getClientDTO(), Client.class));
+		cardRepository.save(card);
 	}
 
 	@Override
 	public void editCreditCard(CreditCardDTO cardDTO) {
-		cardRepository.update(objectMapperUtils.map(cardDTO, CreditCard.class));				
+		cardDTO.setPassword(passwordEncoder.encode(cardDTO.getPassword()));
+		
+		CreditCard card = objectMapperUtils.map(cardDTO, CreditCard.class);
+		card.setClient(objectMapperUtils.map(cardDTO.getClientDTO(), Client.class));
+		cardRepository.update(card);				
 	}
 
 	@Override
@@ -59,10 +67,9 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 	@Override
 	public CreditCardDTO getCreditCardByCardNumber(String cardNumber) {
-		CreditCardDTO card = new CreditCardDTO();	
 		CreditCard entity_card = cardRepository.findByCardNumber(cardNumber);
 		
-		card = objectMapperUtils.map(entity_card, CreditCardDTO.class);
+		CreditCardDTO card = objectMapperUtils.map(entity_card, CreditCardDTO.class);
 		card.setClientDTO(objectMapperUtils.map(entity_card.getClient(), ClientDTO.class));
 		
 //		return objectMapperUtils.map(cardRepository.findByCardNumber(cardNumber), CreditCardDTO.class);
@@ -100,11 +107,13 @@ public class CreditCardServiceImpl implements CreditCardService{
 	}
 
 	@Override
-	public String signin(String cardNumber, String password) {
-		System.out.println(">>> " + cardNumber);
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(cardNumber, password));
+	public String signin(String username, String password) {
+		
+		System.out.println(">>> " + username);
 		System.out.println(">>> " + password);
-		return jwtTokenProvider.createToken(cardNumber, "");
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)); // STACK!!!!
+		
+		return jwtTokenProvider.createToken(username, cardRepository.findByCardNumber(username).getRole());
 	}
 
 }

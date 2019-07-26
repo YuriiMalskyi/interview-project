@@ -42,13 +42,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		 
 		 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		 
-//		 .and()
-//		 
-//		 .authorizeRequests().antMatchers("/client/**", "/transactions-history/**", "/credit-card/**").hasAnyAuthority("", "CLIENT")
+		 .and()
+		 
+		 .authorizeRequests().antMatchers("/client/**", "/transactions-history/**", "/credit-card/**").hasAnyAuthority("CLIENT")
 		 
 		 .and()
 			
-		 .authorizeRequests().antMatchers("/**").anonymous()//("/auth/signin*").anonymous()
+		 .authorizeRequests().antMatchers("/**").anonymous()/**///("/auth/signin*").anonymous()
 		 			 
 /*		 .antMatcher("/**").authorizeRequests()/*.anyRequest().anonymous()/*.authenticated()
 		 	.and()
@@ -57,16 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		 
 		 .apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
 	}
-	
-	@Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER")
-                .and()
-                .withUser("admin").password("password").roles("ADMIN");
-    }
-	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -77,5 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
+
+
 	
 }
