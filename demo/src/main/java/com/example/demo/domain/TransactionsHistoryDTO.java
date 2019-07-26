@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.example.demo.enums.Operation;

@@ -46,7 +46,7 @@ public class JdbcClientRepository implements ClientRepository{
 
 	@Override
 	public Client getById(int id) {
-		System.out.println("\n------------------------\nIncomming value to getById(int id) method :\n" + id + "\n------------------------\n");
+//		System.out.println("\n------------------------\nIncomming value to getById(int id) method :\n" + id + "\n------------------------\n");
 		Client cl =  jdbcTemplate.queryForObject("select * from client where id = " + id, new BeanPropertyRowMapper<Client>(Client.class));
 		cl.toString();
 		return cl;

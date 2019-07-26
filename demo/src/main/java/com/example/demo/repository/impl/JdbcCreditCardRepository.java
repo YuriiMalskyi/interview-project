@@ -1,22 +1,17 @@
 package com.example.demo.repository.impl;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.Client;
 import com.example.demo.entity.CreditCard;
 import com.example.demo.entity.TransactionsHistory;
 import com.example.demo.enums.AccountType;
 import com.example.demo.enums.Operation;
-import com.example.demo.exceptions.CreditCardNotFoundException;
-import com.example.demo.mappers.CreditCardRowMapper;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.CreditCardRepository;
 import com.example.demo.repository.TransactionsHistoryRepository;
@@ -48,7 +43,7 @@ public class JdbcCreditCardRepository implements CreditCardRepository{
 	@Override
 	public void save(CreditCard creditCard) {
 		String cardNumber = numberGenerator.generate();
-		while(jdbcTemplate.update("select count(*) from credit_card where card_number = " + cardNumber) != 0) {
+		while(jdbcTemplate.queryForObject("select count(*) from credit_card where card_number = " + cardNumber, Integer.class) != 0) {
 			cardNumber = numberGenerator.generate();
 		}
 		jdbcTemplate.update(

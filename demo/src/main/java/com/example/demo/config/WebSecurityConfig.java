@@ -13,7 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.AccessDeniedHandler;
 
 import com.example.demo.config.jwt.JWTTokenFilterConfigurer;
 import com.example.demo.config.jwt.JWTTokenProvider;
@@ -25,14 +24,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
-
-//	@Autowired
-//	private AccessDeniedHandler accessDeniedHandler;
-	
-//	@Bean
-//	public UserDetailsService userDetailsService() {
-//	    return super.userDetailsService();
-//	}
 	
 	@Autowired
 	private JWTTokenProvider jwtTokenProvider;	
@@ -45,40 +36,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
-		 http.csrf().disable().cors();
+		 http.csrf().disable().cors()
 		 
-		 http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		 .and()
 		 
-		 http.antMatcher("/**").authorizeRequests().anyRequest().authenticated()
+		 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		 
+		 .and()
+		 
+		 .antMatcher("/**").authorizeRequests().anyRequest().anonymous()/*.authenticated()
 		 	.and()
-		 		.antMatcher("/auth/**").authorizeRequests().anyRequest().anonymous();
+		 		.antMatcher("/auth/**").authorizeRequests().anyRequest().anonymous();*/
+		 .and()		 
 		 
-//         .authorizeRequests()
-//				.antMatchers("/", "/home", "/about").permitAll()
-//				.antMatchers("/admin/**").hasAnyRole("ADMIN")
-//				.antMatchers("/user/**").hasAnyRole("USER")
-//				.anyRequest().anonymous();//.authenticated()
-//         .and()
-//         .formLogin()
-//				.loginPage("/login")
-//				.permitAll()
-//				.and()
-//         .logout()
-//				.permitAll()
-//				.and()
-////         .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-////         .and()
-//         .cors()
-//         .and()
-//         .apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
-//		
-//		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//
-//		http.authorizeRequests().antMatchers("/auth/signin", "/auth/signup").anonymous();
-//
-//		http.antMatcher("/**").authorizeRequests().anyRequest().authenticated();		
-//
-//		http.apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
+		 .apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
 	}
 	
 	@Autowired
